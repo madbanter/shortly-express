@@ -11,12 +11,19 @@ module.exports.createSession = (req, res, next) => {
 
 
 //createUser - models.user, on Success use createSession (GET)
-module.exports.createUser = (req, res, callback) => {
+module.exports.createUser = (req, res, next) => {
   models.Users.get({username: req.body.username}).then(user => {
     if (user) {
-      callback('user exists');
+      next('user exists');
     } else {
-      models.Users.create({username: req.body.username, password: req.body.password});
+      models.Users.create({username: req.body.username, password: req.body.password}).then(success => {
+        if (!success) {
+          next(success);
+        } else {
+          next(null, success);
+        }
+      });
+      console.log('I did it!!!');
     }
   });
 };

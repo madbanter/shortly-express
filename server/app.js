@@ -77,6 +77,25 @@ app.post('/links',
 /************************************************************/
 // Write your authentication routes here
 /************************************************************/
+// app.get('/login', (req, res) => {
+//   res.render('login');
+// });
+
+app.get('/signup', (req, res) => {
+  res.render('signup');
+});
+
+app.post('/signup', (req, res) => {
+  Auth.createUser(req, res, (err, data) => {
+    if (err) {
+      console.log('Could not make user: ' + err);
+      res.redirect(500, '/signup');
+    } else {
+      console.log(data);
+      res.redirect(201, '/');
+    }
+  });
+});
 
 
 
