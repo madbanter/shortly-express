@@ -1,6 +1,6 @@
 const models = require('../models');
 const Promise = require('bluebird');
-// const parseCookies = require('./cookieParser.js');
+const parseCookies = require('./cookieParser.js');
 
 module.exports.createSession = (req, res, next) => {
   //Check the req for cookies
@@ -16,11 +16,32 @@ module.exports.createSession = (req, res, next) => {
           .then((sessionObj) => {
             res.cookie = {hash: sessionObj.hash};
             req.cookie = {hash: sessionObj.hash};
+            next(null, 'session created');
             // update sessions db with userID for this session
           });
       });
   });
 };
+
+module.exports.verifySession = (req, res, next) => {
+  parseCookies(req, res, (hasCookie, parsedCookie) => {
+    if (!hasCookie) {
+      res.redirect('/login');
+    } else {
+      return parsedCookie;
+    }
+  })
+    .then((cookie) => {
+      models.Sessions.get(cookie).then((session) => {
+        if (!models.Sessions.isLoggedIn(session)) {
+          res.redirect('/login');
+        }
+      });
+    });
+};
+
+
+
 
 /************************************************************/
 // Add additional authentication middleware functions below
@@ -38,6 +59,7 @@ module.exports.createUser = (req, res, next) => {
           next(success);
         } else {
           //create sessionId and return it;
+          this.createSession(req, res, next);
           next(null, success);
         }
       });

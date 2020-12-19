@@ -4,6 +4,7 @@ const parseCookies = (req, res, next) => {
     next('no cookie found');
   } else {
     console.log(cookie);
+    req.cookie = {hash: cookie};
   }
 };
 
