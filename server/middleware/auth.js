@@ -1,8 +1,22 @@
 const models = require('../models');
 const Promise = require('bluebird');
+// const parseCookies = require('./cookieParser.js');
 
 module.exports.createSession = (req, res, next) => {
-  //POST
+  //Check the req for cookies
+  //if there are no cookies !req.cookie, created one(models.Session.create)
+  //else VerifySession()
+  models.Sessions.create()
+    .then(({insertId}) => {
+      models.Sessions.get({id: insertId})
+        .then((sessionObj) => {
+          res.cookie = {hash: sessionObj.hash};
+          req.cookie = {hash: sessionObj.hash};
+          console.log(req.cookie);
+          console.log(res.cookie);
+          // update sessions db with userID for this session
+        });
+    });
 };
 
 /************************************************************/
@@ -37,6 +51,7 @@ module.exports.login = (req, res, next) => {
         next('user does not exist');
       } else if (models.Users.compare(req.body.password, user.password, user.salt)) {
         //Create sessionID and return it;
+        this.createSession(req, res, next);
         next(null, 'logged in');
       } else {
         next('could not log in');
