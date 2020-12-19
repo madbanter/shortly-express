@@ -33,7 +33,7 @@ class Sessions extends Model {
    * match the options, the promise will only be fulfilled with one.
    */
   get(options) {
-    console.log(options);
+    // console.log(options);
     return super.get.call(this, options)
       .then(session => {
         if (!session || !session.userId) {
@@ -51,10 +51,11 @@ class Sessions extends Model {
    * @returns {Promise<Object>} A promise that is fulfilled with the results of
    * an insert query or rejected with the error that occured.
    */
-  create() {
+  create(id) {
+    let userId = id;
     let data = utils.createRandom32String();
     let hash = utils.createHash(data);
-    return super.create.call(this, { hash });
+    return super.create.call(this, { hash, userId });
   }
 }
 

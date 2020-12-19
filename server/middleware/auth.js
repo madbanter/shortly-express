@@ -6,17 +6,20 @@ module.exports.createSession = (req, res, next) => {
   //Check the req for cookies
   //if there are no cookies !req.cookie, created one(models.Session.create)
   //else VerifySession()
-  models.Sessions.create()
-    .then(({insertId}) => {
-      models.Sessions.get({id: insertId})
-        .then((sessionObj) => {
-          res.cookie = {hash: sessionObj.hash};
-          req.cookie = {hash: sessionObj.hash};
-          console.log(req.cookie);
-          console.log(res.cookie);
-          // update sessions db with userID for this session
-        });
-    });
+  models.Users.get({username: req.body.username}).then((user) => {
+    var userId = user.id;
+    return userId;
+  }).then((userId) => {
+    models.Sessions.create(userId)
+      .then(({ insertId }) => {
+        models.Sessions.get({id: insertId})
+          .then((sessionObj) => {
+            res.cookie = {hash: sessionObj.hash};
+            req.cookie = {hash: sessionObj.hash};
+            // update sessions db with userID for this session
+          });
+      });
+  });
 };
 
 /************************************************************/
