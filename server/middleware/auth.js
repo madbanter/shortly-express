@@ -23,7 +23,6 @@ module.exports.createUser = (req, res, next) => {
           next(null, success);
         }
       });
-      console.log('I did it!!!');
     }
   });
 };

@@ -89,10 +89,10 @@ app.post('/signup', (req, res) => {
   Auth.createUser(req, res, (err, data) => {
     if (err) {
       console.log('Could not make user: ' + err);
-      res.redirect(500, '/signup');
+      res.redirect('/signup');
     } else {
       console.log(data);
-      res.redirect(201, '/');
+      res.redirect('/');
     }
   });
 });
