@@ -77,9 +77,9 @@ app.post('/links',
 /************************************************************/
 // Write your authentication routes here
 /************************************************************/
-// app.get('/login', (req, res) => {
-//   res.render('login');
-// });
+app.get('/login', (req, res) => {
+  res.render('login');
+});
 
 app.get('/signup', (req, res) => {
   res.render('signup');
@@ -91,7 +91,19 @@ app.post('/signup', (req, res) => {
       console.log('Could not make user: ' + err);
       res.redirect('/signup');
     } else {
-      console.log(data);
+      console.log('Signed up, but change me to a sessionID please!');
+      res.redirect('/');
+    }
+  });
+});
+
+app.post('/login', (req, res) => {
+  Auth.login(req, res, (err, data) => {
+    if (err) {
+      console.log('Could not login: ' + err);
+      res.redirect('/login');
+    } else {
+      console.log('logged in, but change me to a sessionID please!');
       res.redirect('/');
     }
   });

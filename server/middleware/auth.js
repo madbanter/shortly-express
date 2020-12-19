@@ -20,13 +20,26 @@ module.exports.createUser = (req, res, next) => {
         if (!success) {
           next(success);
         } else {
+          //create sessionId and return it;
           next(null, success);
         }
       });
     }
   });
 };
+
 //login - models.user, on Success use createSession (GET)
 module.exports.login = (req, res, next) => {
   //a bunch of stuff happens here
+  models.Users.get({username: req.body.username})
+    .then(user => {
+      if (!user) {
+        next('user does not exist');
+      } else if (models.Users.compare(req.body.password, user.password, user.salt)) {
+        //Create sessionID and return it;
+        next(null, 'logged in');
+      } else {
+        next('could not log in');
+      }
+    });
 };
