@@ -35,6 +35,8 @@ module.exports.verifySession = (req, res, next) => {
       models.Sessions.get(cookie).then((session) => {
         if (!models.Sessions.isLoggedIn(session)) {
           res.redirect('/login');
+        } else {
+          //user is logged in?????
         }
       });
     });
